@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Submission</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+  }
+  
+  form {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+  }
+  
+  input[type="text"],
+  select,
+  input[type="date"],
+  input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+  }
+  
+  button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+  }
+  
+  button[type="submit"]:hover {
+      background-color: #45a049;
+  }
+  
+  .source {
+      margin-bottom: 10px;
+  }
+  
+  .add-source-button {
+      background-color: #008CBA;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+  }
+  
+  .add-source-button:hover {
+      background-color: #006080;
+  }
+  
+  .remove-source-button {
+      background-color: #f44336;
+      color: white;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+  }
+  
+  .remove-source-button:hover {
+      background-color: #b0281a;
+  }
+</style>
+<body>
+	<h4>Will update Team scores in the prompt soon.</h4>
+    <form id="myForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="entry.1176757169" required><br><br>
+        
+        <label for="team">Team:</label>
+        <select id="team" name="entry.2058806909" required>
+            <option value="Sricharan Team">Sricharan Team</option>
+	    <option value="Abhinav Team">Abhinav Team</option>
+            <option value="Pranav Vel Team">Pranav Vel Team</option>
+            <option value="Negal Team">Negal Team</option>
+            <option value="Roshan Team">Roshan Team</option>
+            <option value="Jayshri Team">Jayshri Team</option>
+	    <option value="MRJ Sir Team">MRJ Sir Team</option>
+        </select><br><br>
+        
+        <label for="time">Time:</label>
+        <input type="date" id="time" name="entry.2076229424" required><br><br>
+        
+        <div id="sourcesContainer">
+            <div class="source">
+                <label for="source1">Source:</label>
+                <select id="source1" name="entry.457077965" required>
+                    <option value="Level 1">Level 1</option>
+                    <option value="Level 2">Level 2</option>
+                    <option value="Section A">Section A</option>
+                    <option value="Section B">Section B</option>
+                    <option value="Level 3">Level 3</option>
+                    <option value="Section C">Section C</option>
+                    <option value="Tab Assignment 1">Tab Assignment 1</option>
+                    <option value="Tab Assignment 2">Tab Assignment 2</option>
+                    <option value="Tab Assignment 3">Tab Assignment 3</option>
+                    <option value="Tab Assignment 4">Tab Assignment 4</option>
+                    <option value="Tab Assignment 5">Tab Assignment 5</option>
+                    <option value="Tab Assignment 6">Tab Assignment 6</option>
+                    <option value="Workbook">Workbook</option>
+                    <option value="Compendium">Compendium</option>
+		    <option value="CPP">CPP</option>
+		    <option value="Section II">Section II</option>
+                    <option value="Others">Others</option>
+                </select>
+                <label for="numQuestions1">Number of Questions:</label>
+                <input type="number" id="numQuestions1" name="entry.1785540449" required>
+            </div>
+        </div>
+        
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+var today = new Date().toISOString().split('T')[0];
+
+// Set the maximum and minimum attributes of the date input field
+var timeInput = document.getElementById("time");
+timeInput.setAttribute("max", today);
+
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var form = document.getElementById("myForm");
+            
+            var formData = new FormData(form);
+            var totalMarks = 0;
+            
+            var sourceDropdown = document.getElementById("source1");
+            var numQuestionsInput = document.getElementById("numQuestions1");
+            
+            var source = sourceDropdown.value;
+            var numQuestions = parseInt(numQuestionsInput.value);
+            
+            var markingScheme = {
+                "Level 1": 2,
+                "Level 2": 2,
+                "Section A": 2,
+                "Section B": 2,
+                "Level 3": 3,
+                "Section C": 5,
+                "Tab Assignment 1": 2,
+                "Tab Assignment 2": 2,
+                "Tab Assignment 3": 3,
+                "Tab Assignment 4": 3,
+                "Tab Assignment 5": 5,
+                "Tab Assignment 6": 5,
+                "Workbook": 3,
+                "Compendium": 5,
+		"CPP": 2.5,
+		"Section II": 2.5,
+                "Others": 2
+            };
+            
+            var marks = markingScheme[source] || 0;
+            totalMarks = marks * numQuestions;
+            
+            formData.append("entry.1085139092", totalMarks);
+            
+            fetch("https://docs.google.com/forms/u/0/d/e/1FAIpQLSc6mScBVNv_5VBIQqsFHdzcEpXaoTK7iyliZQO8a-hyirkagg/formResponse", {
+                method: "POST",
+                mode: "no-cors",
+                body: formData
+            })
+            .then(function() {
+                alert("Form submitted successfully! Total Marks: " + totalMarks);
+                form.reset();
+            })
+            .catch(function() {
+                alert("Error submitting form.");
+            });
+        });
+    </script>
+</body>
+</html>
